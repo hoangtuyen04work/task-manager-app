@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.chart.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx/21" 
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.taskmanager.controller.StatisticsController"
+            prefHeight="700.0" prefWidth="1000.0"
+            stylesheets="@../css/style.css">
+    
+    <top>
+        <VBox spacing="10" styleClass="card">
+            <padding>
+                <Insets top="15" right="15" bottom="15" left="15"/>
+            </padding>
+            
+            <Label text="Thống kê hiệu suất" styleClass="label-title"/>
+            
+            <!-- Date Range Selector -->
+            <HBox spacing="15" alignment="CENTER_LEFT">
+                <Label text="Khoảng thời gian:"/>
+                
+                <!-- Quick Select Buttons -->
+                <Button text="7 ngày qua" onAction="#handleLast7Days"/>
+                <Button text="30 ngày qua" onAction="#handleLast30Days"/>
+                <Button text="Tháng này" onAction="#handleThisMonth"/>
+                
+                <Separator orientation="VERTICAL"/>
+                
+                <!-- Custom Range -->
+                <Label text="Từ:"/>
+                <DatePicker fx:id="dateFrom" onAction="#handleDateRangeChange"/>
+                <Label text="Đến:"/>
+                <DatePicker fx:id="dateTo" onAction="#handleDateRangeChange"/>
+                
+                <Region HBox.hgrow="ALWAYS"/>
+                
+                <Button text="Làm mới" onAction="#handleRefresh"/>
+            </HBox>
+        </VBox>
+    </top>
+    
+    <center>
+        <TabPane tabClosingPolicy="UNAVAILABLE">
+            
+            <!-- Tab 1: Overview -->
+            <Tab text="Tổng quan">
+                <ScrollPane fitToWidth="true" fitToHeight="true">
+                    <VBox spacing="20">
+                        <padding>
+                            <Insets top="20" right="20" bottom="20" left="20"/>
+                        </padding>
+                        
+                        <!-- Overall Stats Cards -->
+                        <GridPane hgap="20" vgap="20">
+                            <!-- Total Tasks -->
+                            <VBox spacing="10" alignment="CENTER" styleClass="stats-card" 
+                                 GridPane.rowIndex="0" GridPane.columnIndex="0">
+                                <padding>
+                                    <Insets top="30" right="30" bottom="30" left="30"/>
+                                </padding>
+                                <Label fx:id="lblOverallTotal" text="0" styleClass="stats-value"/>
+                                <Label text="Tổng số Tasks" styleClass="stats-label"/>
+                            </VBox>
+                            
+                            <!-- Completed Tasks -->
+                            <VBox spacing="10" alignment="CENTER" styleClass="stats-card" 
+                                 GridPane.rowIndex="0" GridPane.columnIndex="1">
+                                <padding>
+                                    <Insets top="30" right="30" bottom="30" left="30"/>
+                                </padding>
+                                <Label fx:id="lblOverallCompleted" text="0" styleClass="stats-value" 
+                                      style="-fx-text-fill: #2ecc71;"/>
+                                <Label text="Đã hoàn thành" styleClass="stats-label"/>
+                            </VBox>
+                            
+                            <!-- Pending Tasks -->
+                            <VBox spacing="10" alignment="CENTER" styleClass="stats-card" 
+                                 GridPane.rowIndex="0" GridPane.columnIndex="2">
+                                <padding>
+                                    <Insets top="30" right="30" bottom="30" left="30"/>
+                                </padding>
+                                <Label fx:id="lblOverallPending" text="0" styleClass="stats-value" 
+                                      style="-fx-text-fill: #e74c3c;"/>
+                                <Label text="Chưa hoàn thành" styleClass="stats-label"/>
+                            </VBox>
+                            
+                            <!-- Average Completion Rate -->
+                            <VBox spacing="10" alignment="CENTER" styleClass="stats-card" 
+                                 GridPane.rowIndex="0" GridPane.columnIndex="3">
+                                <padding>
+                                    <Insets top="30" right="30" bottom="30" left="30"/>
+                                </padding>
+                                <Label fx:id="lblAverageRate" text="0%" styleClass="stats-value" 
+                                      style="-fx-text-fill: #3498db;"/>
+                                <Label text="Tỷ lệ TB" styleClass="stats-label"/>
+                            </VBox>
+                        </GridPane>
+                        
+                        <!-- Priority Distribution -->
+                        <VBox spacing="10" styleClass="card">
+                            <padding>
+                                <Insets top="15" right="15" bottom="15" left="15"/>
+                            </padding>
+                            <Label text="Phân bổ theo độ ưu tiên" styleClass="label-title"/>
+                            
+                            <GridPane hgap="15" vgap="10">
+                                <Label text="Cao:" GridPane.rowIndex="0" GridPane.columnIndex="0" 
+                                      styleClass="priority-high"/>
+                                <Label fx:id="lblHighTotal" text="0 tasks" 
+                                      GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+                                <Label fx:id="lblHighCompleted" text="(0 hoàn thành)" 
+                                      GridPane.rowIndex="0" GridPane.columnIndex="2" 
+                                      style="-fx-text-fill: #7f8c8d;"/>
+                                
+                                <Label text="Trung bình:" GridPane.rowIndex="1" GridPane.columnIndex="0" 
+                                      styleClass="priority-medium"/>
+                                <Label fx:id="lblMediumTotal" text="0 tasks" 
+                                      GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+                                <Label fx:id="lblMediumCompleted" text="(0 hoàn thành)" 
+                                      GridPane.rowIndex="1" GridPane.columnIndex="2" 
+                                      style="-fx-text-fill: #7f8c8d;"/>
+                                
+                                <Label text="Thấp:" GridPane.rowIndex="2" GridPane.columnIndex="0" 
+                                      styleClass="priority-low"/>
+                                <Label fx:id="lblLowTotal" text="0 tasks" 
+                                      GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+                                <Label fx:id="lblLowCompleted" text="(0 hoàn thành)" 
+                                      GridPane.rowIndex="2" GridPane.columnIndex="2" 
+                                      style="-fx-text-fill: #7f8c8d;"/>
+                            </GridPane>
+                        </VBox>
+                    </VBox>
+                </ScrollPane>
+            </Tab>
+            
+            <!-- Tab 2: Charts -->
+            <Tab text="Biểu đồ">
+                <ScrollPane fitToWidth="true">
+                    <VBox spacing="20">
+                        <padding>
+                            <Insets top="20" right="20" bottom="20" left="20"/>
+                        </padding>
+                        
+                        <!-- Bar Chart: Tasks by Date -->
+                        <VBox spacing="10" styleClass="card">
+                            <padding>
+                                <Insets top="15" right="15" bottom="15" left="15"/>
+                            </padding>
+                            <Label text="Số lượng tasks theo ngày" styleClass="label-title"/>
+                            <BarChart fx:id="barChart" prefHeight="300">
+                                <xAxis>
+                                    <CategoryAxis side="BOTTOM" label="Ngày"/>
+                                </xAxis>
+                                <yAxis>
+                                    <NumberAxis side="LEFT" label="Số lượng"/>
+                                </yAxis>
+                            </BarChart>
+                        </VBox>
+                        
+                        <!-- Line Chart: Completion Rate by Date -->
+                        <VBox spacing="10" styleClass="card">
+                            <padding>
+                                <Insets top="15" right="15" bottom="15" left="15"/>
+                            </padding>
+                            <Label text="Tỷ lệ hoàn thành theo ngày" styleClass="label-title"/>
+                            <LineChart fx:id="lineChart" prefHeight="300">
+                                <xAxis>
+                                    <CategoryAxis side="BOTTOM" label="Ngày"/>
+                                </xAxis>
+                                <yAxis>
+                                    <NumberAxis side="LEFT" label="Tỷ lệ (%)"/>
+                                </yAxis>
+                            </LineChart>
+                        </VBox>
+                        
+                        <!-- Pie Chart: Priority Distribution -->
+                        <VBox spacing="10" styleClass="card">
+                            <padding>
+                                <Insets top="15" right="15" bottom="15" left="15"/>
+                            </padding>
+                            <Label text="Phân bố theo độ ưu tiên" styleClass="label-title"/>
+                            <PieChart fx:id="pieChart" prefHeight="300"/>
+                        </VBox>
+                    </VBox>
+                </ScrollPane>
+            </Tab>
+            
+        </TabPane>
+    </center>
+    
+</BorderPane>

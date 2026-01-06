@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.taskmanager.controller.CalendarHistoryController"
+            prefHeight="700.0" prefWidth="1000.0"
+            styleClass="root"
+            stylesheets="@../css/style.css">
+    
+    <!-- Top - Header -->
+    <top>
+        <VBox spacing="10" styleClass="header-panel">
+            <padding>
+                <Insets top="15" right="15" bottom="15" left="15"/>
+            </padding>
+            
+            <!-- Title -->
+            <Label text="Lịch Sử Công Việc" styleClass="header-title">
+                <font>
+                    <Font name="System Bold" size="24"/>
+                </font>
+            </Label>
+            
+            <!-- Month navigation -->
+            <HBox spacing="10" alignment="CENTER">
+                <Button text="◀ Tháng trước" onAction="#handlePreviousMonth" styleClass="button"/>
+                <Label fx:id="lblMonthYear" text="Tháng Năm" styleClass="month-label">
+                    <font>
+                        <Font name="System Bold" size="18"/>
+                    </font>
+                </Label>
+                <Button text="Tháng sau ▶" onAction="#handleNextMonth" styleClass="button"/>
+                <Region HBox.hgrow="ALWAYS"/>
+                <Button text="Hôm nay" onAction="#handleToday" styleClass="button-primary"/>
+                <Button text="Đóng" onAction="#handleClose" styleClass="button"/>
+            </HBox>
+        </VBox>
+    </top>
+    
+    <!-- Center - Main content -->
+    <center>
+        <SplitPane dividerPositions="0.6" styleClass="split-pane">
+            <padding>
+                <Insets top="10" right="15" bottom="15" left="15"/>
+            </padding>
+            
+            <!-- Left - Calendar -->
+            <VBox spacing="10" styleClass="panel">
+                <Label text="Lịch" styleClass="section-title">
+                    <font>
+                        <Font name="System Bold" size="14"/>
+                    </font>
+                </Label>
+                
+                <ScrollPane fitToWidth="true" fitToHeight="true" styleClass="scroll-pane">
+                    <GridPane fx:id="calendarGrid" hgap="5" vgap="5" styleClass="calendar-grid">
+                        <padding>
+                            <Insets top="10" right="10" bottom="10" left="10"/>
+                        </padding>
+                    </GridPane>
+                </ScrollPane>
+                
+                <!-- Legend -->
+                <VBox spacing="5" styleClass="legend-panel">
+                    <padding>
+                        <Insets top="10" right="10" bottom="10" left="10"/>
+                    </padding>
+                    
+                    <Label text="Chú thích:" styleClass="legend-title">
+                        <font>
+                            <Font name="System Bold" size="12"/>
+                        </font>
+                    </Label>
+                    
+                    <HBox spacing="15">
+                        <HBox spacing="5" alignment="CENTER_LEFT">
+                            <Region styleClass="legend-box" style="-fx-background-color: #ecf0f1;" prefWidth="20" prefHeight="20"/>
+                            <Label text="Không có task" styleClass="legend-text"/>
+                        </HBox>
+                        <HBox spacing="5" alignment="CENTER_LEFT">
+                            <Region styleClass="legend-box" style="-fx-background-color: #fadbd8;" prefWidth="20" prefHeight="20"/>
+                            <Label text="Có task chưa làm" styleClass="legend-text"/>
+                        </HBox>
+                        <HBox spacing="5" alignment="CENTER_LEFT">
+                            <Region styleClass="legend-box" style="-fx-background-color: #d5f4e6;" prefWidth="20" prefHeight="20"/>
+                            <Label text="1-2 task hoàn thành" styleClass="legend-text"/>
+                        </HBox>
+                        <HBox spacing="5" alignment="CENTER_LEFT">
+                            <Region styleClass="legend-box" style="-fx-background-color: #82e0aa;" prefWidth="20" prefHeight="20"/>
+                            <Label text="3-5 task hoàn thành" styleClass="legend-text"/>
+                        </HBox>
+                        <HBox spacing="5" alignment="CENTER_LEFT">
+                            <Region styleClass="legend-box" style="-fx-background-color: #27ae60;" prefWidth="20" prefHeight="20"/>
+                            <Label text="6+ task hoàn thành" styleClass="legend-text"/>
+                        </HBox>
+                    </HBox>
+                </VBox>
+            </VBox>
+            
+            <!-- Right - Day details -->
+            <VBox spacing="10" styleClass="panel">
+                <Label fx:id="lblSelectedDate" text="Ngày: --/--/----" styleClass="section-title">
+                    <font>
+                        <Font name="System Bold" size="14"/>
+                    </font>
+                </Label>
+                
+                <Label fx:id="lblStats" text="Tổng: 0 | Hoàn thành: 0 | Tỷ lệ: 0%" styleClass="stats-label"/>
+                
+                <!-- Tasks list -->
+                <VBox spacing="5" VBox.vgrow="ALWAYS">
+                    <Label text="Danh sách công việc:" styleClass="subsection-title">
+                        <font>
+                            <Font name="System Bold" size="12"/>
+                        </font>
+                    </Label>
+                    
+                    <ListView fx:id="taskListView" VBox.vgrow="ALWAYS" styleClass="list-view">
+                    </ListView>
+                </VBox>
+                
+                <!-- Notes -->
+                <VBox spacing="5" VBox.vgrow="ALWAYS">
+                    <Label text="Ghi chú:" styleClass="subsection-title">
+                        <font>
+                            <Font name="System Bold" size="12"/>
+                        </font>
+                    </Label>
+                    
+                    <TextArea fx:id="notesArea" VBox.vgrow="ALWAYS" editable="false" 
+                             wrapText="true" styleClass="text-area">
+                    </TextArea>
+                </VBox>
+            </VBox>
+        </SplitPane>
+    </center>
+    
+</BorderPane>

@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<DialogPane xmlns="http://javafx.com/javafx/21" 
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.taskmanager.controller.TaskController"
+            prefHeight="450.0" prefWidth="600.0"
+            stylesheets="@../css/style.css">
+    
+    <content>
+        <VBox spacing="15">
+            <padding>
+                <Insets top="20" right="20" bottom="20" left="20"/>
+            </padding>
+            
+            <!-- Title -->
+            <VBox spacing="5">
+                <Label text="Tên công việc:" styleClass="label-subtitle"/>
+                <TextField fx:id="txtTitle" promptText="Nhập tên công việc (bắt buộc)" 
+                          maxWidth="Infinity"/>
+            </VBox>
+            
+            <!-- Description -->
+            <VBox spacing="5" VBox.vgrow="ALWAYS">
+                <Label text="Mô tả:" styleClass="label-subtitle"/>
+                <TextArea fx:id="txtDescription" promptText="Nhập mô tả chi tiết (tùy chọn)" 
+                         wrapText="true" VBox.vgrow="ALWAYS" prefRowCount="5"/>
+            </VBox>
+            
+            <!-- Date and Priority in HBox -->
+            <HBox spacing="15">
+                <!-- Date -->
+                <VBox spacing="5" HBox.hgrow="ALWAYS">
+                    <Label text="Ngày:" styleClass="label-subtitle"/>
+                    <DatePicker fx:id="datePicker" maxWidth="Infinity"/>
+                </VBox>
+                
+                <!-- Priority -->
+                <VBox spacing="5" HBox.hgrow="ALWAYS">
+                    <Label text="Độ ưu tiên:" styleClass="label-subtitle"/>
+                    <ComboBox fx:id="cbPriority" maxWidth="Infinity"/>
+                </VBox>
+            </HBox>
+            
+            <!-- Validation Message -->
+            <Label fx:id="lblValidation" text="" style="-fx-text-fill: #e74c3c;" 
+                  wrapText="true" managed="false" visible="false"/>
+        </VBox>
+    </content>
+    
+    <buttonTypes>
+        <ButtonType fx:id="btnSave" text="Lưu" buttonData="OK_DONE"/>
+        <ButtonType fx:id="btnCancel" text="Hủy" buttonData="CANCEL_CLOSE"/>
+    </buttonTypes>
+    
+</DialogPane>

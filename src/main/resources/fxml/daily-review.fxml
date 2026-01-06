@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<DialogPane xmlns="http://javafx.com/javafx/21" 
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.taskmanager.controller.DailyReviewController"
+            prefHeight="600.0" prefWidth="700.0"
+            stylesheets="@../css/style.css">
+    
+    <content>
+        <VBox spacing="15">
+            <padding>
+                <Insets top="20" right="20" bottom="20" left="20"/>
+            </padding>
+            
+            <!-- Date Selection -->
+            <VBox spacing="5">
+                <Label text="Ngày đánh giá:" styleClass="label-subtitle"/>
+                <DatePicker fx:id="datePicker" onAction="#handleDateChange" maxWidth="300"/>
+            </VBox>
+            
+            <Separator/>
+            
+            <!-- Auto-calculated Stats -->
+            <VBox spacing="10" styleClass="card">
+                <padding>
+                    <Insets top="15" right="15" bottom="15" left="15"/>
+                </padding>
+                
+                <Label text="Thống kê tự động" styleClass="label-title"/>
+                
+                <HBox spacing="20">
+                    <VBox spacing="5" alignment="CENTER" styleClass="stats-card" HBox.hgrow="ALWAYS">
+                        <Label fx:id="lblTotalTasks" text="0" styleClass="stats-value"/>
+                        <Label text="Tổng số tasks" styleClass="stats-label"/>
+                    </VBox>
+                    
+                    <VBox spacing="5" alignment="CENTER" styleClass="stats-card" HBox.hgrow="ALWAYS">
+                        <Label fx:id="lblCompletedTasks" text="0" styleClass="stats-value" 
+                              style="-fx-text-fill: #2ecc71;"/>
+                        <Label text="Đã hoàn thành" styleClass="stats-label"/>
+                    </VBox>
+                    
+                    <VBox spacing="5" alignment="CENTER" styleClass="stats-card" HBox.hgrow="ALWAYS">
+                        <Label fx:id="lblCompletionRate" text="0%" styleClass="stats-value" 
+                              style="-fx-text-fill: #3498db;"/>
+                        <Label text="Tỷ lệ hoàn thành" styleClass="stats-label"/>
+                    </VBox>
+                </HBox>
+            </VBox>
+            
+            <Separator/>
+            
+            <!-- Rating -->
+            <VBox spacing="5">
+                <Label text="Đánh giá (1-5 sao):" styleClass="label-subtitle"/>
+                <HBox fx:id="ratingBox" spacing="10" alignment="CENTER_LEFT">
+                    <!-- Stars will be added programmatically -->
+                </HBox>
+            </VBox>
+            
+            <!-- Notes -->
+            <VBox spacing="5" VBox.vgrow="ALWAYS">
+                <Label text="Ghi chú / Cảm nhận:" styleClass="label-subtitle"/>
+                <TextArea fx:id="txtNotes" promptText="Nhập ghi chú, cảm nhận về ngày hôm nay..." 
+                         wrapText="true" VBox.vgrow="ALWAYS" prefRowCount="5"/>
+                <Label text="Tối đa 2000 ký tự" style="-fx-text-fill: #7f8c8d; -fx-font-size: 11px;"/>
+            </VBox>
+            
+            <!-- Task Preview -->
+            <VBox spacing="5">
+                <Label text="Danh sách tasks trong ngày:" styleClass="label-subtitle"/>
+                <ListView fx:id="taskListView" prefHeight="120" maxHeight="150">
+                    <!-- Tasks will be loaded here -->
+                </ListView>
+            </VBox>
+            
+        </VBox>
+    </content>
+    
+    <buttonTypes>
+        <ButtonType fx:id="btnSave" text="Lưu" buttonData="OK_DONE"/>
+        <ButtonType fx:id="btnCancel" text="Hủy" buttonData="CANCEL_CLOSE"/>
+    </buttonTypes>
+    
+</DialogPane>
