@@ -189,6 +189,71 @@
                 </ScrollPane>
             </Tab>
             
+            <!-- Tab 3: Heatmap (giống Anki) -->
+            <Tab text="Heatmap">
+                <ScrollPane fitToWidth="true">
+                    <VBox spacing="20">
+                        <padding>
+                            <Insets top="20" right="20" bottom="20" left="20"/>
+                        </padding>
+                        
+                        <!-- Heatmap Card -->
+                        <VBox spacing="15" styleClass="card">
+                            <padding>
+                                <Insets top="15" right="15" bottom="15" left="15"/>
+                            </padding>
+                            
+                            <HBox alignment="CENTER_LEFT" spacing="15">
+                                <Label text="Lịch nhiệt (Heatmap)" styleClass="label-title"/>
+                                <Region HBox.hgrow="ALWAYS"/>
+                                <Button text="6 tháng" onAction="#handleHeatmap6Months"/>
+                                <Button text="1 năm" onAction="#handleHeatmap1Year"/>
+                            </HBox>
+                            
+                            <!-- Heatmap Container -->
+                            <ScrollPane fx:id="heatmapScrollPane" fitToWidth="true" 
+                                       prefHeight="250" styleClass="heatmap-container">
+                                <VBox fx:id="heatmapContainer" spacing="5" alignment="TOP_LEFT">
+                                    <padding>
+                                        <Insets top="10" right="10" bottom="10" left="10"/>
+                                    </padding>
+                                </VBox>
+                            </ScrollPane>
+                            
+                            <!-- Legend -->
+                            <HBox spacing="10" alignment="CENTER_LEFT">
+                                <Label text="Ít việc" style="-fx-font-size: 12px; -fx-text-fill: #7f8c8d;"/>
+                                <Region styleClass="heatmap-cell, heatmap-level-0" prefWidth="20" prefHeight="20"/>
+                                <Region styleClass="heatmap-cell, heatmap-level-1" prefWidth="20" prefHeight="20"/>
+                                <Region styleClass="heatmap-cell, heatmap-level-2" prefWidth="20" prefHeight="20"/>
+                                <Region styleClass="heatmap-cell, heatmap-level-3" prefWidth="20" prefHeight="20"/>
+                                <Region styleClass="heatmap-cell, heatmap-level-4" prefWidth="20" prefHeight="20"/>
+                                <Label text="Nhiều việc" style="-fx-font-size: 12px; -fx-text-fill: #7f8c8d;"/>
+                            </HBox>
+                            
+                            <!-- Stats Summary -->
+                            <GridPane hgap="30" vgap="15">
+                                <Label text="Tổng số ngày:" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+                                <Label fx:id="lblHeatmapDays" text="0" GridPane.rowIndex="0" GridPane.columnIndex="1" 
+                                      style="-fx-font-weight: bold;"/>
+                                
+                                <Label text="Ngày có việc:" GridPane.rowIndex="0" GridPane.columnIndex="2"/>
+                                <Label fx:id="lblHeatmapActiveDays" text="0" GridPane.rowIndex="0" GridPane.columnIndex="3" 
+                                      style="-fx-font-weight: bold; -fx-text-fill: #2ecc71;"/>
+                                
+                                <Label text="Trung bình/ngày:" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+                                <Label fx:id="lblHeatmapAverage" text="0" GridPane.rowIndex="1" GridPane.columnIndex="1" 
+                                      style="-fx-font-weight: bold;"/>
+                                
+                                <Label text="Chuỗi dài nhất:" GridPane.rowIndex="1" GridPane.columnIndex="2"/>
+                                <Label fx:id="lblHeatmapStreak" text="0 ngày" GridPane.rowIndex="1" GridPane.columnIndex="3" 
+                                      style="-fx-font-weight: bold; -fx-text-fill: #e74c3c;"/>
+                            </GridPane>
+                        </VBox>
+                    </VBox>
+                </ScrollPane>
+            </Tab>
+            
         </TabPane>
     </center>
     
