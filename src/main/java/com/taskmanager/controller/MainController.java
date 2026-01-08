@@ -32,37 +32,69 @@ import java.util.stream.Collectors;
  * Quản lý hiển thị và thao tác với danh sách tasks
  */
 public class MainController {
-    
-    @FXML private DatePicker datePicker;
-    @FXML private RadioButton filterAll;
-    @FXML private RadioButton filterCompleted;
-    @FXML private RadioButton filterPending;
-    @FXML private CheckBox filterHigh;
-    @FXML private CheckBox filterMedium;
-    @FXML private CheckBox filterLow;
-    @FXML private TextField searchField;
-    
-    @FXML private TableView<Task> taskTable;
-    @FXML private TableColumn<Task, Boolean> colCompleted;
-    @FXML private TableColumn<Task, String> colTitle;
-    @FXML private TableColumn<Task, String> colDescription;
-    @FXML private TableColumn<Task, String> colPriority;
-    @FXML private TableColumn<Task, String> colDate;
-    @FXML private TableColumn<Task, Void> colActions;
-    
-    @FXML private Label lblTotalTasks;
-    @FXML private Label lblCompletedTasks;
-    @FXML private Label lblPendingTasks;
-    @FXML private Label lblCompletionRate;
-    @FXML private ProgressBar progressBar;
-    
-    @FXML private Label statusLabel;
-    @FXML private Label dateLabel;
-    
+
+    @FXML
+    private DatePicker datePicker;
+    @FXML
+    private RadioButton filterAll;
+    @FXML
+    private RadioButton filterCompleted;
+    @FXML
+    private RadioButton filterPending;
+    @FXML
+    private CheckBox filterHigh;
+    @FXML
+    private CheckBox filterMedium;
+    @FXML
+    private CheckBox filterLow;
+    @FXML
+    private TextField searchField;
+
+    @FXML
+    private TableView<Task> taskTable;
+    @FXML
+    private TableColumn<Task, Boolean> colCompleted;
+    @FXML
+    private TableColumn<Task, String> colTitle;
+    @FXML
+    private TableColumn<Task, String> colDescription;
+    @FXML
+    private TableColumn<Task, String> colPriority;
+    @FXML
+    private TableColumn<Task, String> colDate;
+    @FXML
+    private TableColumn<Task, Void> colActions;
+
+    @FXML
+    private Label lblTotalTasks;
+    @FXML
+    private Label lblCompletedTasks;
+    @FXML
+    private Label lblPendingTasks;
+    @FXML
+    private Label lblCompletionRate;
+    @FXML
+    private ProgressBar progressBar;
+
+    @FXML
+    private Label statusLabel;
+    @FXML
+    private Label dateLabel;
+
+    // Notification Panel
+    @FXML
+    private VBox notificationPanel;
+    @FXML
+    private Label notificationIcon;
+    @FXML
+    private Label notificationTitle;
+    @FXML
+    private Label notificationMessage;
+
     private TaskDAO taskDAO;
     private ObservableList<Task> allTasks;
     private ObservableList<Task> filteredTasks;
-    
+
     /**
      * Initialize controller
      */
@@ -71,24 +103,27 @@ public class MainController {
         taskDAO = new TaskDAO();
         allTasks = FXCollections.observableArrayList();
         filteredTasks = FXCollections.observableArrayList();
-        
+
         // Set current date
         datePicker.setValue(LocalDate.now());
         updateDateLabel();
-        
+
         // Setup table columns
         setupTableColumns();
-        
+
         // Setup context menu for table
         setupContextMenu();
-        
+
         // Load initial data
         loadTasks();
-        
+
+        // Check and show daily notification
+        checkAndShowDailyNotification();
+
         // Update status
         statusLabel.setText("Sẵn sàng");
     }
-    
+
     /**
      * Cấu hình các cột của bảng
      */
@@ -96,7 +131,7 @@ public class MainController {
         // Completed column with checkbox
         colCompleted.setCellFactory(col -> new TableCell<>() {
             private final CheckBox checkBox = new CheckBox();
-            
+
             @Override
             protected void updateItem(Boolean item, boolean empty) {
                 super.updateItem(item, empty);
@@ -110,7 +145,7 @@ public class MainController {
                 }
             }
         });
-        
+
         // Title column
         colTitle.setCellValueFactory(new PropertyValueFactory<>("title"));
         colTitle.setCellFactory(col -> new TableCell<>() {
@@ -131,7 +166,7 @@ public class MainController {
                 }
             }
         });
-        
+
         // Description column
         colDescription.setCellValueFactory(new PropertyValueFactory<>("description"));
         colDescription.setCellFactory(col -> new TableCell<>() {
@@ -152,10 +187,10 @@ public class MainController {
                 }
             }
         });
-        
+
         // Priority column with color coding
-        colPriority.setCellValueFactory(cellData -> 
-            new SimpleStringProperty(cellData.getValue().getPriority().getDisplayName()));
+        colPriority.setCellValueFactory(
+                cellData -> new SimpleStringProperty(cellData.getValue().getPriority().getDisplayName()));
         colPriority.setCellFactory(col -> new TableCell<>() {
             @Override
             protected void updateItem(String item, boolean empty) {
@@ -166,13 +201,13 @@ public class MainController {
                 } else {
                     Task task = getTableRow().getItem();
                     setText(item);
-                    
+
                     String style = switch (task.getPriority()) {
                         case HIGH -> "-fx-text-fill: #e74c3c; -fx-font-weight: bold;";
                         case MEDIUM -> "-fx-text-fill: #f39c12;";
                         case LOW -> "-fx-text-fill: #2ecc71;";
                     };
-                    
+
                     if (task.isCompleted()) {
                         style += " -fx-strikethrough: true;";
                     }
@@ -180,17 +215,17 @@ public class MainController {
                 }
             }
         });
-        
+
         // Date column
-        colDate.setCellValueFactory(cellData -> 
-            new SimpleStringProperty(DateUtil.formatDate(cellData.getValue().getTaskDate())));
-        
+        colDate.setCellValueFactory(
+                cellData -> new SimpleStringProperty(DateUtil.formatDate(cellData.getValue().getTaskDate())));
+
         // Actions column with Edit and Delete buttons
         colActions.setCellFactory(col -> new TableCell<>() {
             private final Button btnEdit = new Button("Sửa");
             private final Button btnDelete = new Button("Xóa");
             private final HBox pane = new HBox(5, btnEdit, btnDelete);
-            
+
             {
                 btnEdit.setOnAction(e -> {
                     Task task = getTableRow().getItem();
@@ -198,18 +233,18 @@ public class MainController {
                         handleEditTask(task);
                     }
                 });
-                
+
                 btnDelete.setOnAction(e -> {
                     Task task = getTableRow().getItem();
                     if (task != null) {
                         handleDeleteTask(task);
                     }
                 });
-                
+
                 btnEdit.getStyleClass().add("button");
                 btnDelete.getStyleClass().add("button-danger");
             }
-            
+
             @Override
             protected void updateItem(Void item, boolean empty) {
                 super.updateItem(item, empty);
@@ -221,13 +256,13 @@ public class MainController {
             }
         });
     }
-    
+
     /**
      * Cấu hình context menu cho bảng
      */
     private void setupContextMenu() {
         ContextMenu contextMenu = new ContextMenu();
-        
+
         MenuItem markComplete = new MenuItem("Đánh dấu hoàn thành");
         markComplete.setOnAction(e -> {
             Task task = taskTable.getSelectionModel().getSelectedItem();
@@ -235,7 +270,7 @@ public class MainController {
                 handleToggleComplete(task);
             }
         });
-        
+
         MenuItem markIncomplete = new MenuItem("Đánh dấu chưa hoàn thành");
         markIncomplete.setOnAction(e -> {
             Task task = taskTable.getSelectionModel().getSelectedItem();
@@ -243,7 +278,7 @@ public class MainController {
                 handleToggleComplete(task);
             }
         });
-        
+
         MenuItem edit = new MenuItem("Sửa");
         edit.setOnAction(e -> {
             Task task = taskTable.getSelectionModel().getSelectedItem();
@@ -251,7 +286,7 @@ public class MainController {
                 handleEditTask(task);
             }
         });
-        
+
         MenuItem delete = new MenuItem("Xóa");
         delete.setOnAction(e -> {
             Task task = taskTable.getSelectionModel().getSelectedItem();
@@ -259,7 +294,7 @@ public class MainController {
                 handleDeleteTask(task);
             }
         });
-        
+
         MenuItem duplicate = new MenuItem("Nhân bản");
         duplicate.setOnAction(e -> {
             Task task = taskTable.getSelectionModel().getSelectedItem();
@@ -267,13 +302,13 @@ public class MainController {
                 handleDuplicateTask(task);
             }
         });
-        
-        contextMenu.getItems().addAll(markComplete, markIncomplete, 
-            new SeparatorMenuItem(), edit, delete, duplicate);
-        
+
+        contextMenu.getItems().addAll(markComplete, markIncomplete,
+                new SeparatorMenuItem(), edit, delete, duplicate);
+
         taskTable.setContextMenu(contextMenu);
     }
-    
+
     /**
      * Load tasks từ database
      */
@@ -283,33 +318,33 @@ public class MainController {
             if (selectedDate == null) {
                 selectedDate = LocalDate.now();
             }
-            
+
             List<Task> tasks = taskDAO.findByDate(selectedDate);
             allTasks.setAll(tasks);
             applyFilters();
             updateQuickStats();
-            
+
             statusLabel.setText("Đã tải " + tasks.size() + " công việc");
         } catch (SQLException e) {
             AlertUtil.showError("Lỗi", "Không thể tải danh sách công việc: " + e.getMessage());
             e.printStackTrace();
         }
     }
-    
+
     /**
      * Áp dụng bộ lọc lên danh sách tasks
      */
     private void applyFilters() {
         List<Task> filtered = allTasks.stream()
-            .filter(this::matchesStatusFilter)
-            .filter(this::matchesPriorityFilter)
-            .filter(this::matchesSearchFilter)
-            .collect(Collectors.toList());
-        
+                .filter(this::matchesStatusFilter)
+                .filter(this::matchesPriorityFilter)
+                .filter(this::matchesSearchFilter)
+                .collect(Collectors.toList());
+
         filteredTasks.setAll(filtered);
         taskTable.setItems(filteredTasks);
     }
-    
+
     /**
      * Kiểm tra task có khớp với bộ lọc trạng thái không
      */
@@ -323,7 +358,7 @@ public class MainController {
         }
         return true;
     }
-    
+
     /**
      * Kiểm tra task có khớp với bộ lọc priority không
      */
@@ -334,7 +369,7 @@ public class MainController {
             case LOW -> filterLow.isSelected();
         };
     }
-    
+
     /**
      * Kiểm tra task có khớp với từ khóa tìm kiếm không
      */
@@ -343,15 +378,14 @@ public class MainController {
         if (keyword == null || keyword.trim().isEmpty()) {
             return true;
         }
-        
+
         keyword = keyword.toLowerCase();
         String title = task.getTitle().toLowerCase();
-        String description = task.getDescription() != null ? 
-            task.getDescription().toLowerCase() : "";
-        
+        String description = task.getDescription() != null ? task.getDescription().toLowerCase() : "";
+
         return title.contains(keyword) || description.contains(keyword);
     }
-    
+
     /**
      * Cập nhật thống kê nhanh
      */
@@ -360,14 +394,14 @@ public class MainController {
         long completed = allTasks.stream().filter(Task::isCompleted).count();
         int pending = total - (int) completed;
         double completionRate = total > 0 ? (completed * 100.0 / total) : 0.0;
-        
+
         lblTotalTasks.setText(String.valueOf(total));
         lblCompletedTasks.setText(String.valueOf(completed));
         lblPendingTasks.setText(String.valueOf(pending));
         lblCompletionRate.setText(String.format("%.0f%%", completionRate));
         progressBar.setProgress(completionRate / 100.0);
     }
-    
+
     /**
      * Cập nhật label ngày
      */
@@ -386,80 +420,81 @@ public class MainController {
             }
         }
     }
-    
+
     // Event Handlers
-    
+
     @FXML
     private void handleDateChange() {
         updateDateLabel();
         loadTasks();
+        checkAndShowDailyNotification();
     }
-    
+
     @FXML
     private void handleFilterChange() {
         applyFilters();
     }
-    
+
     @FXML
     private void handleSearch() {
         applyFilters();
     }
-    
+
     @FXML
     private void handleAddTask() {
         showTaskDialog(null);
     }
-    
+
     @FXML
     private void handleToday() {
         datePicker.setValue(LocalDate.now());
         handleDateChange();
     }
-    
+
     @FXML
     private void handleRefresh() {
         loadTasks();
     }
-    
+
     @FXML
     private void handleExit() {
         Platform.exit();
     }
-    
+
     @FXML
     private void handleShowTasks() {
         // Already on tasks view
     }
-    
+
     @FXML
     private void handleShowDailyReview() {
         showDailyReviewDialog();
     }
-    
+
     @FXML
     private void handleShowStatistics() {
         showStatisticsWindow();
     }
-    
+
     @FXML
     private void handleShowCalendarHistory() {
         showCalendarHistoryWindow();
     }
-    
+
     @FXML
     private void handleAbout() {
-        AlertUtil.showInfo("Về ứng dụng", 
-            "Task Manager v1.0.0\n\n" +
-            "Ứng dụng quản lý công việc hàng ngày\n" +
-            "Sử dụng JavaFX 21 và MySQL Database\n\n" +
-            "© 2024");
+        AlertUtil.showInfo("Về ứng dụng",
+                "Task Manager v1.0.0\n\n" +
+                        "Ứng dụng quản lý công việc hàng ngày\n" +
+                        "Sử dụng JavaFX 21 và MySQL Database\n\n" +
+                        "© 2024");
     }
-    
+
     @FXML
     private void handleCopyTasks() {
         showCopyTasksDialog();
     }
-    
+
     /**
      * Toggle trạng thái hoàn thành của task
      */
@@ -475,23 +510,22 @@ public class MainController {
             e.printStackTrace();
         }
     }
-    
+
     /**
      * Hiển thị dialog để sửa task
      */
     private void handleEditTask(Task task) {
         showTaskDialog(task);
     }
-    
+
     /**
      * Xóa task
      */
     private void handleDeleteTask(Task task) {
         boolean confirmed = AlertUtil.showConfirmation(
-            "Xác nhận xóa",
-            "Bạn có chắc chắn muốn xóa công việc:\n" + task.getTitle() + "?"
-        );
-        
+                "Xác nhận xóa",
+                "Bạn có chắc chắn muốn xóa công việc:\n" + task.getTitle() + "?");
+
         if (confirmed) {
             try {
                 taskDAO.delete(task.getId());
@@ -505,7 +539,7 @@ public class MainController {
             }
         }
     }
-    
+
     /**
      * Nhân bản task
      */
@@ -516,10 +550,10 @@ public class MainController {
         newTask.setTaskDate(task.getTaskDate());
         newTask.setPriority(task.getPriority());
         newTask.setCompleted(false);
-        
+
         showTaskDialog(newTask);
     }
-    
+
     /**
      * Hiển thị dialog thêm/sửa task
      */
@@ -527,15 +561,15 @@ public class MainController {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/task-form.fxml"));
             DialogPane dialogPane = loader.load();
-            
+
             TaskController controller = loader.getController();
             controller.setTask(task);
             controller.setDatePicker(datePicker.getValue());
-            
+
             Dialog<ButtonType> dialog = new Dialog<>();
             dialog.setDialogPane(dialogPane);
             dialog.setTitle(task == null ? "Thêm công việc mới" : "Sửa công việc");
-            
+
             Optional<ButtonType> result = dialog.showAndWait();
             if (result.isPresent() && result.get().getButtonData() == ButtonBar.ButtonData.OK_DONE) {
                 Task savedTask = controller.getTask();
@@ -549,7 +583,7 @@ public class MainController {
             e.printStackTrace();
         }
     }
-    
+
     /**
      * Hiển thị dialog đánh giá cuối ngày
      */
@@ -557,21 +591,21 @@ public class MainController {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/daily-review.fxml"));
             DialogPane dialogPane = loader.load();
-            
+
             DailyReviewController controller = loader.getController();
             controller.setDate(datePicker.getValue());
-            
+
             Dialog<ButtonType> dialog = new Dialog<>();
             dialog.setDialogPane(dialogPane);
             dialog.setTitle("Đánh giá cuối ngày");
-            
+
             dialog.showAndWait();
         } catch (IOException e) {
             AlertUtil.showError("Lỗi", "Không thể mở form đánh giá: " + e.getMessage());
             e.printStackTrace();
         }
     }
-    
+
     /**
      * Hiển thị cửa sổ thống kê
      */
@@ -579,7 +613,7 @@ public class MainController {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/statistics.fxml"));
             Scene scene = new Scene(loader.load());
-            
+
             Stage stage = new Stage();
             stage.setTitle("Thống kê");
             stage.setScene(scene);
@@ -590,7 +624,7 @@ public class MainController {
             e.printStackTrace();
         }
     }
-    
+
     /**
      * Hiển thị cửa sổ lịch sử công việc theo lịch
      */
@@ -598,7 +632,7 @@ public class MainController {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/calendar-history.fxml"));
             Scene scene = new Scene(loader.load());
-            
+
             Stage stage = new Stage();
             stage.setTitle("Lịch Sử Công Việc");
             stage.setScene(scene);
@@ -609,7 +643,7 @@ public class MainController {
             e.printStackTrace();
         }
     }
-    
+
     /**
      * Hiển thị dialog copy tasks
      */
@@ -619,18 +653,18 @@ public class MainController {
             Dialog<ButtonType> dialog = new Dialog<>();
             dialog.setTitle("Copy Tasks");
             dialog.setHeaderText("Copy công việc từ ngày này sang ngày khác");
-            
+
             // Tạo content
             VBox content = new VBox(15);
             content.setPadding(new Insets(20));
-            
+
             DatePicker sourceDate = new DatePicker(datePicker.getValue());
             DatePicker targetDate = new DatePicker(LocalDate.now());
-            
+
             ListView<Task> taskListView = new ListView<>();
             taskListView.setPrefHeight(200);
             taskListView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-            
+
             // Load tasks khi chọn ngày nguồn
             sourceDate.setOnAction(e -> {
                 try {
@@ -640,11 +674,11 @@ public class MainController {
                     AlertUtil.showError("Lỗi", "Không thể tải danh sách tasks: " + ex.getMessage());
                 }
             });
-            
+
             // Load initial tasks
             List<Task> initialTasks = taskDAO.findPendingByDate(sourceDate.getValue());
             taskListView.getItems().setAll(initialTasks);
-            
+
             // Custom cell factory to display task info
             taskListView.setCellFactory(param -> new ListCell<Task>() {
                 @Override
@@ -662,38 +696,37 @@ public class MainController {
                     }
                 }
             });
-            
+
             content.getChildren().addAll(
-                new Label("Ngày nguồn:"),
-                sourceDate,
-                new Label("Ngày đích:"),
-                targetDate,
-                new Label("Chọn tasks cần copy (chỉ hiển thị tasks chưa hoàn thành):"),
-                taskListView,
-                new Label("Nhấn Ctrl+Click để chọn nhiều tasks")
-            );
-            
+                    new Label("Ngày nguồn:"),
+                    sourceDate,
+                    new Label("Ngày đích:"),
+                    targetDate,
+                    new Label("Chọn tasks cần copy (chỉ hiển thị tasks chưa hoàn thành):"),
+                    taskListView,
+                    new Label("Nhấn Ctrl+Click để chọn nhiều tasks"));
+
             dialog.getDialogPane().setContent(content);
             dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
-            
+
             Optional<ButtonType> result = dialog.showAndWait();
             if (result.isPresent() && result.get() == ButtonType.OK) {
                 // Lấy các tasks được chọn
                 List<Long> selectedIds = taskListView.getSelectionModel().getSelectedItems()
-                    .stream()
-                    .map(Task::getId)
-                    .collect(Collectors.toList());
-                
+                        .stream()
+                        .map(Task::getId)
+                        .collect(Collectors.toList());
+
                 if (selectedIds.isEmpty()) {
                     AlertUtil.showWarning("Cảnh báo", "Vui lòng chọn ít nhất một task để copy");
                     return;
                 }
-                
+
                 taskDAO.copyTasksToDate(selectedIds, targetDate.getValue());
-                AlertUtil.showInfo("Thành công", 
-                    "Đã copy " + selectedIds.size() + " tasks sang ngày " + 
-                    DateUtil.formatDate(targetDate.getValue()));
-                
+                AlertUtil.showInfo("Thành công",
+                        "Đã copy " + selectedIds.size() + " tasks sang ngày " +
+                                DateUtil.formatDate(targetDate.getValue()));
+
                 // Refresh nếu đang xem ngày đích
                 if (datePicker.getValue().equals(targetDate.getValue())) {
                     loadTasks();
@@ -703,5 +736,120 @@ public class MainController {
             AlertUtil.showError("Lỗi", "Không thể copy tasks: " + e.getMessage());
             e.printStackTrace();
         }
+    }
+
+    /**
+     * Kiểm tra và hiển thị thông báo hàng ngày
+     */
+    private void checkAndShowDailyNotification() {
+        LocalDate selectedDate = datePicker.getValue();
+        if (selectedDate == null)
+            return;
+
+        // Chỉ hiển thị notification cho ngày hôm nay
+        if (!selectedDate.equals(LocalDate.now())) {
+            hideNotification();
+            return;
+        }
+
+        try {
+            List<Task> todayTasks = taskDAO.findByDate(selectedDate);
+
+            if (todayTasks.isEmpty()) {
+                // Trường hợp 1: Chưa có task nào
+                showNotification(
+                        "⚠",
+                        "Chưa có công việc nào hôm nay!",
+                        "Bạn chưa lên kế hoạch công việc cho hôm nay. Hãy thêm task để bắt đầu làm việc hiệu quả!",
+                        "warning");
+            } else {
+                // Kiểm tra tasks chưa hoàn thành
+                List<Task> pendingTasks = todayTasks.stream()
+                        .filter(task -> !task.isCompleted())
+                        .collect(Collectors.toList());
+
+                if (!pendingTasks.isEmpty()) {
+                    // Trường hợp 2: Có tasks chưa hoàn thành
+                    StringBuilder message = new StringBuilder();
+                    message.append("Bạn còn ").append(pendingTasks.size())
+                            .append(" công việc chưa hoàn thành:\n\n");
+
+                    int count = 0;
+                    for (Task task : pendingTasks) {
+                        if (count >= 5) {
+                            message.append("... và ")
+                                    .append(pendingTasks.size() - 5)
+                                    .append(" công việc khác");
+                            break;
+                        }
+
+                        String priorityIcon = switch (task.getPriority()) {
+                            case HIGH -> "🔴";
+                            case MEDIUM -> "🟡";
+                            case LOW -> "🟢";
+                        };
+
+                        message.append(priorityIcon).append(" ")
+                                .append(task.getTitle()).append("\n");
+                        count++;
+                    }
+
+                    showNotification(
+                            "📋",
+                            "Công việc cần hoàn thành",
+                            message.toString(),
+                            "info");
+                } else {
+                    // Trường hợp 3: Tất cả tasks đã hoàn thành
+                    showNotification(
+                            "✅",
+                            "Xuất sắc!",
+                            "Bạn đã hoàn thành tất cả " + todayTasks.size() + " công việc hôm nay. Tuyệt vời!",
+                            "success");
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Hiển thị thông báo
+     */
+    private void showNotification(String icon, String title, String message, String type) {
+        if (notificationPanel == null)
+            return;
+
+        notificationIcon.setText(icon);
+        notificationTitle.setText(title);
+        notificationMessage.setText(message);
+
+        // Xóa tất cả style classes cũ
+        notificationPanel.getStyleClass().removeAll(
+                "notification-info", "notification-warning", "notification-success", "notification-error");
+
+        // Thêm style class mới
+        notificationPanel.getStyleClass().add("notification-" + type);
+
+        notificationPanel.setVisible(true);
+        notificationPanel.setManaged(true);
+    }
+
+    /**
+     * Ẩn thông báo
+     */
+    private void hideNotification() {
+        if (notificationPanel == null)
+            return;
+        notificationPanel.setVisible(false);
+        notificationPanel.setManaged(false);
+    }
+
+    /**
+     * Xử lý đóng thông báo
+     */
+    @FXML
+    private void handleCloseNotification() {
+        hideNotification();
     }
 }

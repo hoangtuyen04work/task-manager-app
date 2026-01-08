@@ -4,175 +4,198 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<BorderPane xmlns="http://javafx.com/javafx/21" 
-            xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="com.taskmanager.controller.MainController"
-            prefHeight="700.0" prefWidth="1200.0"
-            stylesheets="@../css/style.css">
-    
+<BorderPane xmlns="http://javafx.com/javafx/21"
+    xmlns:fx="http://javafx.com/fxml/1"
+    fx:controller="com.taskmanager.controller.MainController"
+    prefHeight="700.0" prefWidth="1200.0"
+    stylesheets="@../css/style.css">
+
     <!-- Top: Menu Bar and Toolbar -->
     <top>
         <VBox>
             <!-- Menu Bar -->
             <MenuBar>
                 <Menu text="File">
-                    <MenuItem text="Làm mới" onAction="#handleRefresh" accelerator="F5"/>
-                    <SeparatorMenuItem/>
-                    <MenuItem text="Thoát" onAction="#handleExit"/>
+                    <MenuItem text="Làm mới" onAction="#handleRefresh" accelerator="F5" />
+                    <SeparatorMenuItem />
+                    <MenuItem text="Thoát" onAction="#handleExit" />
                 </Menu>
                 <Menu text="Xem">
-                    <MenuItem text="Danh sách Tasks" onAction="#handleShowTasks"/>
-                    <MenuItem text="Lịch sử công việc" onAction="#handleShowCalendarHistory" accelerator="Shortcut+H"/>
-                    <MenuItem text="Đánh giá cuối ngày" onAction="#handleShowDailyReview" accelerator="Shortcut+R"/>
-                    <MenuItem text="Thống kê" onAction="#handleShowStatistics" accelerator="Shortcut+S"/>
+                    <MenuItem text="Danh sách Tasks" onAction="#handleShowTasks" />
+                    <MenuItem text="Lịch sử công việc" onAction="#handleShowCalendarHistory"
+                        accelerator="Shortcut+H" />
+                    <MenuItem text="Đánh giá cuối ngày" onAction="#handleShowDailyReview"
+                        accelerator="Shortcut+R" />
+                    <MenuItem text="Thống kê" onAction="#handleShowStatistics"
+                        accelerator="Shortcut+S" />
                 </Menu>
                 <Menu text="Trợ giúp">
-                    <MenuItem text="Về ứng dụng" onAction="#handleAbout"/>
+                    <MenuItem text="Về ứng dụng" onAction="#handleAbout" />
                 </Menu>
             </MenuBar>
-            
+
             <!-- Toolbar -->
             <ToolBar styleClass="tool-bar">
-                <Button text="Thêm Task" onAction="#handleAddTask" styleClass="button-success"/>
-                <Separator orientation="VERTICAL"/>
-                <Button text="Hôm nay" onAction="#handleToday"/>
-                <Button text="Copy Tasks" onAction="#handleCopyTasks" styleClass="button-warning"/>
-                <Separator orientation="VERTICAL"/>
-                <Button text="Lịch sử" onAction="#handleShowCalendarHistory" styleClass="button-info"/>
-                <Button text="Đánh giá cuối ngày" onAction="#handleShowDailyReview"/>
-                <Button text="Thống kê" onAction="#handleShowStatistics"/>
+                <Button text="Thêm Task" onAction="#handleAddTask" styleClass="button-success" />
+                <Separator orientation="VERTICAL" />
+                <Button text="Hôm nay" onAction="#handleToday" />
+                <Button text="Copy Tasks" onAction="#handleCopyTasks" styleClass="button-warning" />
+                <Separator orientation="VERTICAL" />
+                <Button text="Lịch sử" onAction="#handleShowCalendarHistory"
+                    styleClass="button-info" />
+                <Button text="Đánh giá cuối ngày" onAction="#handleShowDailyReview" />
+                <Button text="Thống kê" onAction="#handleShowStatistics" />
             </ToolBar>
+
+            <!-- Notification Panel -->
+            <VBox fx:id="notificationPanel" spacing="5" styleClass="notification-panel"
+                managed="false" visible="false">
+                <padding>
+                    <Insets top="10" right="15" bottom="10" left="15" />
+                </padding>
+                <HBox spacing="10" alignment="CENTER_LEFT">
+                    <Label fx:id="notificationIcon" text="ℹ" styleClass="notification-icon" />
+                    <VBox spacing="3" HBox.hgrow="ALWAYS">
+                        <Label fx:id="notificationTitle" text="Thông báo"
+                            styleClass="notification-title" />
+                        <Label fx:id="notificationMessage" text="" wrapText="true"
+                            styleClass="notification-message" />
+                    </VBox>
+                    <Button text="✕" onAction="#handleCloseNotification"
+                        styleClass="notification-close" />
+                </HBox>
+            </VBox>
         </VBox>
     </top>
-    
+
     <!-- Center: Main Content -->
     <center>
         <SplitPane dividerPositions="0.25, 0.75">
-            
+
             <!-- Left Panel: Date Picker and Filters -->
             <VBox spacing="15" styleClass="card">
                 <padding>
-                    <Insets top="15" right="15" bottom="15" left="15"/>
+                    <Insets top="15" right="15" bottom="15" left="15" />
                 </padding>
-                
+
                 <!-- Date Picker -->
                 <VBox spacing="5">
-                    <Label text="Chọn ngày:" styleClass="label-subtitle"/>
-                    <DatePicker fx:id="datePicker" onAction="#handleDateChange" 
-                               maxWidth="Infinity"/>
+                    <Label text="Chọn ngày:" styleClass="label-subtitle" />
+                    <DatePicker fx:id="datePicker" onAction="#handleDateChange"
+                        maxWidth="Infinity" />
                 </VBox>
-                
-                <Separator/>
-                
+
+                <Separator />
+
                 <!-- Status Filter -->
                 <VBox spacing="5">
-                    <Label text="Trạng thái:" styleClass="label-subtitle"/>
-                    <RadioButton fx:id="filterAll" text="Tất cả" 
-                                selected="true" onAction="#handleFilterChange">
+                    <Label text="Trạng thái:" styleClass="label-subtitle" />
+                    <RadioButton fx:id="filterAll" text="Tất cả"
+                        selected="true" onAction="#handleFilterChange">
                         <toggleGroup>
-                            <ToggleGroup fx:id="statusFilterGroup"/>
+                            <ToggleGroup fx:id="statusFilterGroup" />
                         </toggleGroup>
                     </RadioButton>
-                    <RadioButton fx:id="filterCompleted" text="Đã hoàn thành" 
-                                toggleGroup="$statusFilterGroup" onAction="#handleFilterChange"/>
-                    <RadioButton fx:id="filterPending" text="Chưa hoàn thành" 
-                                toggleGroup="$statusFilterGroup" onAction="#handleFilterChange"/>
+                    <RadioButton fx:id="filterCompleted" text="Đã hoàn thành"
+                        toggleGroup="$statusFilterGroup" onAction="#handleFilterChange" />
+                    <RadioButton fx:id="filterPending" text="Chưa hoàn thành"
+                        toggleGroup="$statusFilterGroup" onAction="#handleFilterChange" />
                 </VBox>
-                
-                <Separator/>
-                
+
+                <Separator />
+
                 <!-- Priority Filter -->
                 <VBox spacing="5">
-                    <Label text="Độ ưu tiên:" styleClass="label-subtitle"/>
-                    <CheckBox fx:id="filterHigh" text="Cao" selected="true" 
-                             onAction="#handleFilterChange" styleClass="priority-high"/>
-                    <CheckBox fx:id="filterMedium" text="Trung bình" selected="true" 
-                             onAction="#handleFilterChange" styleClass="priority-medium"/>
-                    <CheckBox fx:id="filterLow" text="Thấp" selected="true" 
-                             onAction="#handleFilterChange" styleClass="priority-low"/>
+                    <Label text="Độ ưu tiên:" styleClass="label-subtitle" />
+                    <CheckBox fx:id="filterHigh" text="Cao" selected="true"
+                        onAction="#handleFilterChange" styleClass="priority-high" />
+                    <CheckBox fx:id="filterMedium" text="Trung bình" selected="true"
+                        onAction="#handleFilterChange" styleClass="priority-medium" />
+                    <CheckBox fx:id="filterLow" text="Thấp" selected="true"
+                        onAction="#handleFilterChange" styleClass="priority-low" />
                 </VBox>
-                
-                <Separator/>
-                
+
+                <Separator />
+
                 <!-- Search -->
                 <VBox spacing="5">
-                    <Label text="Tìm kiếm:" styleClass="label-subtitle"/>
+                    <Label text="Tìm kiếm:" styleClass="label-subtitle" />
                     <TextField fx:id="searchField" promptText="Tìm theo tên hoặc mô tả..."
-                              onKeyReleased="#handleSearch"/>
+                        onKeyReleased="#handleSearch" />
                 </VBox>
             </VBox>
-            
+
             <!-- Center Panel: Task Table -->
             <VBox spacing="10" styleClass="card">
                 <padding>
-                    <Insets top="15" right="15" bottom="15" left="15"/>
+                    <Insets top="15" right="15" bottom="15" left="15" />
                 </padding>
-                
-                <Label text="Danh sách công việc" styleClass="label-title"/>
-                
+
+                <Label text="Danh sách công việc" styleClass="label-title" />
+
                 <TableView fx:id="taskTable" VBox.vgrow="ALWAYS">
                     <columns>
-                        <TableColumn fx:id="colCompleted" text="✓" prefWidth="40" 
-                                    minWidth="40" maxWidth="40"/>
-                        <TableColumn fx:id="colTitle" text="Tên công việc" prefWidth="250"/>
-                        <TableColumn fx:id="colDescription" text="Mô tả" prefWidth="300"/>
-                        <TableColumn fx:id="colPriority" text="Ưu tiên" prefWidth="100"/>
-                        <TableColumn fx:id="colDate" text="Ngày" prefWidth="100"/>
-                        <TableColumn fx:id="colActions" text="Thao tác" prefWidth="150" 
-                                    minWidth="150" maxWidth="150"/>
+                        <TableColumn fx:id="colCompleted" text="✓" prefWidth="40"
+                            minWidth="40" maxWidth="40" />
+                        <TableColumn fx:id="colTitle" text="Tên công việc" prefWidth="250" />
+                        <TableColumn fx:id="colDescription" text="Mô tả" prefWidth="300" />
+                        <TableColumn fx:id="colPriority" text="Ưu tiên" prefWidth="100" />
+                        <TableColumn fx:id="colDate" text="Ngày" prefWidth="100" />
+                        <TableColumn fx:id="colActions" text="Thao tác" prefWidth="150"
+                            minWidth="150" maxWidth="150" />
                     </columns>
                 </TableView>
             </VBox>
-            
+
             <!-- Right Panel: Quick Stats -->
             <VBox spacing="15" styleClass="card">
                 <padding>
-                    <Insets top="15" right="15" bottom="15" left="15"/>
+                    <Insets top="15" right="15" bottom="15" left="15" />
                 </padding>
-                
-                <Label text="Thống kê nhanh" styleClass="label-title"/>
-                
-                <Separator/>
-                
+
+                <Label text="Thống kê nhanh" styleClass="label-title" />
+
+                <Separator />
+
                 <!-- Total Tasks -->
                 <VBox spacing="5" alignment="CENTER" styleClass="stats-card">
-                    <Label fx:id="lblTotalTasks" text="0" styleClass="stats-value"/>
-                    <Label text="Tổng số tasks" styleClass="stats-label"/>
+                    <Label fx:id="lblTotalTasks" text="0" styleClass="stats-value" />
+                    <Label text="Tổng số tasks" styleClass="stats-label" />
                 </VBox>
-                
+
                 <!-- Completed Tasks -->
                 <VBox spacing="5" alignment="CENTER" styleClass="stats-card">
-                    <Label fx:id="lblCompletedTasks" text="0" styleClass="stats-value" 
-                          style="-fx-text-fill: #2ecc71;"/>
-                    <Label text="Đã hoàn thành" styleClass="stats-label"/>
+                    <Label fx:id="lblCompletedTasks" text="0" styleClass="stats-value"
+                        style="-fx-text-fill: #2ecc71;" />
+                    <Label text="Đã hoàn thành" styleClass="stats-label" />
                 </VBox>
-                
+
                 <!-- Pending Tasks -->
                 <VBox spacing="5" alignment="CENTER" styleClass="stats-card">
-                    <Label fx:id="lblPendingTasks" text="0" styleClass="stats-value" 
-                          style="-fx-text-fill: #e74c3c;"/>
-                    <Label text="Chưa hoàn thành" styleClass="stats-label"/>
+                    <Label fx:id="lblPendingTasks" text="0" styleClass="stats-value"
+                        style="-fx-text-fill: #e74c3c;" />
+                    <Label text="Chưa hoàn thành" styleClass="stats-label" />
                 </VBox>
-                
+
                 <!-- Completion Rate -->
                 <VBox spacing="5" alignment="CENTER" styleClass="stats-card">
-                    <Label fx:id="lblCompletionRate" text="0%" styleClass="stats-value" 
-                          style="-fx-text-fill: #3498db;"/>
-                    <Label text="Tỷ lệ hoàn thành" styleClass="stats-label"/>
-                    <ProgressBar fx:id="progressBar" progress="0" maxWidth="Infinity"/>
+                    <Label fx:id="lblCompletionRate" text="0%" styleClass="stats-value"
+                        style="-fx-text-fill: #3498db;" />
+                    <Label text="Tỷ lệ hoàn thành" styleClass="stats-label" />
+                    <ProgressBar fx:id="progressBar" progress="0" maxWidth="Infinity" />
                 </VBox>
             </VBox>
-            
+
         </SplitPane>
     </center>
-    
+
     <!-- Bottom: Status Bar -->
     <bottom>
         <HBox styleClass="status-bar" spacing="20">
-            <Label fx:id="statusLabel" text="Sẵn sàng"/>
-            <Region HBox.hgrow="ALWAYS"/>
-            <Label fx:id="dateLabel" text=""/>
+            <Label fx:id="statusLabel" text="Sẵn sàng" />
+            <Region HBox.hgrow="ALWAYS" />
+            <Label fx:id="dateLabel" text="" />
         </HBox>
     </bottom>
-    
+
 </BorderPane>

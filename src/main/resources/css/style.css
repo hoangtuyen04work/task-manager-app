@@ -363,3 +363,73 @@
 .heatmap-level-3 { -fx-background-color: #e74c3c; -fx-border-color: #d43f2f; }
 .heatmap-level-4 { -fx-background-color: #c0392b; -fx-border-color: #a93226; }
 */
+
+/* ===================================================================
+   NOTIFICATION PANEL STYLES
+   =================================================================== */
+
+.notification-panel {
+    -fx-background-radius: 6;
+    -fx-padding: 10 15;
+    -fx-border-width: 1;
+    -fx-border-radius: 6;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 8, 0, 0, 2);
+}
+
+.notification-info {
+    -fx-background-color: #d1ecf1;
+    -fx-border-color: #bee5eb;
+}
+
+.notification-warning {
+    -fx-background-color: #fff3cd;
+    -fx-border-color: #ffeaa7;
+}
+
+.notification-success {
+    -fx-background-color: #d4edda;
+    -fx-border-color: #c3e6cb;
+}
+
+.notification-error {
+    -fx-background-color: #f8d7da;
+    -fx-border-color: #f5c6cb;
+}
+
+.notification-icon {
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+    -fx-min-width: 30px;
+}
+
+.notification-title {
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #2c3e50;
+}
+
+.notification-message {
+    -fx-font-size: 13px;
+    -fx-text-fill: #34495e;
+    -fx-wrap-text: true;
+}
+
+.notification-close {
+    -fx-background-color: transparent;
+    -fx-text-fill: #7f8c8d;
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-padding: 2 8;
+    -fx-min-width: 25px;
+    -fx-min-height: 25px;
+    -fx-background-radius: 3;
+}
+
+.notification-close:hover {
+    -fx-background-color: rgba(0,0,0,0.1);
+    -fx-text-fill: #2c3e50;
+}
+
+.notification-close:pressed {
+    -fx-background-color: rgba(0,0,0,0.2);
+}

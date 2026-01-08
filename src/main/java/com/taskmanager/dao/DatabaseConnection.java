@@ -7,10 +7,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Properties;
 
-/**
- * Singleton class quản lý kết nối database
- * Load cấu hình từ application.properties
- */
+
 public class DatabaseConnection {
     
     private static DatabaseConnection instance;
@@ -19,17 +16,11 @@ public class DatabaseConnection {
     private String username;
     private String password;
     private String driver;
-    
-    /**
-     * Private constructor để implement Singleton pattern
-     */
+
     private DatabaseConnection() {
         loadProperties();
     }
-    
-    /**
-     * Load cấu hình database từ application.properties
-     */
+
     private void loadProperties() {
         Properties props = new Properties();
         try (InputStream input = getClass().getClassLoader()
@@ -46,8 +37,7 @@ public class DatabaseConnection {
             this.username = props.getProperty("db.username");
             this.password = props.getProperty("db.password");
             this.driver = props.getProperty("db.driver");
-            
-            // Load JDBC driver
+
             Class.forName(driver);
             
         } catch (IOException | ClassNotFoundException e) {
@@ -55,10 +45,7 @@ public class DatabaseConnection {
             e.printStackTrace();
         }
     }
-    
-    /**
-     * Lấy instance của DatabaseConnection (Singleton)
-     */
+
     public static DatabaseConnection getInstance() {
         if (instance == null) {
             synchronized (DatabaseConnection.class) {
@@ -69,21 +56,14 @@ public class DatabaseConnection {
         }
         return instance;
     }
-    
-    /**
-     * Lấy connection đến database
-     * Tự động tạo connection mới nếu connection cũ bị đóng
-     */
+
     public Connection getConnection() throws SQLException {
         if (connection == null || connection.isClosed()) {
             connection = DriverManager.getConnection(url, username, password);
         }
         return connection;
     }
-    
-    /**
-     * Đóng connection
-     */
+
     public void closeConnection() {
         if (connection != null) {
             try {
@@ -95,10 +75,7 @@ public class DatabaseConnection {
             }
         }
     }
-    
-    /**
-     * Test kết nối database
-     */
+
     public boolean testConnection() {
         try {
             Connection conn = getConnection();

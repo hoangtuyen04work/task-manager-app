@@ -29,7 +29,6 @@ public class TaskDAO {
     public Task save(Task task) throws SQLException {
         String sql = "INSERT INTO tasks (title, description, task_date, priority, completed) " +
                     "VALUES (?, ?, ?, ?, ?)";
-        
         try (Connection conn = dbConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             
@@ -52,7 +51,6 @@ public class TaskDAO {
                     throw new SQLException("Tạo task thất bại, không lấy được ID.");
                 }
             }
-            
             return task;
         }
     }
