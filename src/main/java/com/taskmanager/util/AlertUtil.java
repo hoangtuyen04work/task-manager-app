@@ -6,14 +6,9 @@ import javafx.scene.control.Alert.AlertType;
 
 import java.util.Optional;
 
-/**
- * Utility class để hiển thị các dialog và alert
- */
+
 public class AlertUtil {
     
-    /**
-     * Hiển thị thông báo thông tin
-     */
     public static void showInfo(String title, String message) {
         Alert alert = new Alert(AlertType.INFORMATION);
         alert.setTitle(title);
@@ -22,9 +17,7 @@ public class AlertUtil {
         alert.showAndWait();
     }
     
-    /**
-     * Hiển thị cảnh báo
-     */
+
     public static void showWarning(String title, String message) {
         Alert alert = new Alert(AlertType.WARNING);
         alert.setTitle(title);
@@ -33,9 +26,7 @@ public class AlertUtil {
         alert.showAndWait();
     }
     
-    /**
-     * Hiển thị thông báo lỗi
-     */
+
     public static void showError(String title, String message) {
         Alert alert = new Alert(AlertType.ERROR);
         alert.setTitle(title);
@@ -44,10 +35,7 @@ public class AlertUtil {
         alert.showAndWait();
     }
     
-    /**
-     * Hiển thị dialog xác nhận
-     * @return true nếu user chọn OK, false nếu chọn Cancel
-     */
+
     public static boolean showConfirmation(String title, String message) {
         Alert alert = new Alert(AlertType.CONFIRMATION);
         alert.setTitle(title);

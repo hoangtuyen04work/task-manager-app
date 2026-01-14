@@ -3,10 +3,7 @@ package com.taskmanager.model;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-/**
- * Model class đại diện cho đánh giá cuối ngày
- * Lưu trữ thống kê và ghi chú về hiệu suất làm việc trong ngày
- */
+
 public class DailyReview {
     
     private Long id;
@@ -14,12 +11,11 @@ public class DailyReview {
     private int totalTasks;
     private int completedTasks;
     private double completionRate;
-    private int rating; // 1-5 stars
+    private int rating;
     private String notes;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
     
-    // Constructors
     public DailyReview() {
         this.reviewDate = LocalDate.now();
         this.rating = 3;
@@ -35,7 +31,6 @@ public class DailyReview {
         this.notes = notes;
     }
     
-    // Getters and Setters
     public Long getId() {
         return id;
     }

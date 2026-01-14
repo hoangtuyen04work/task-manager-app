@@ -2,10 +2,6 @@ package com.taskmanager.model;
 
 import java.time.LocalDate;
 
-/**
- * Model class để lưu thống kê task cho một ngày cụ thể
- * Dùng để hiển thị trên calendar với màu sắc khác nhau
- */
 public class DayStatistics {
     
     private LocalDate date;
@@ -54,16 +50,10 @@ public class DayStatistics {
         this.notes = notes;
     }
     
-    /**
-     * Tính toán tỷ lệ hoàn thành
-     */
     public double getCompletionRate() {
         return totalTasks > 0 ? (completedTasks * 100.0 / totalTasks) : 0.0;
     }
     
-    /**
-     * Kiểm tra có tasks không
-     */
     public boolean hasTasks() {
         return totalTasks > 0;
     }

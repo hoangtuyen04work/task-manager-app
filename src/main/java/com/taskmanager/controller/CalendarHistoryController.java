@@ -24,10 +24,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-/**
- * Controller cho màn hình lịch sử công việc theo lịch
- * Hiển thị calendar với màu sắc biểu thị số lượng task hoàn thành
- */
+//Controller cho màn hình lịch sử công việc theo lịch
+//Hiển thị calendar với màu sắc biểu thị số lượng task hoàn thành
 public class CalendarHistoryController {
 
     @FXML

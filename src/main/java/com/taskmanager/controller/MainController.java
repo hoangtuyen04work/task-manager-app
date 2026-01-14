@@ -27,10 +27,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-/**
- * Controller cho màn hình chính của ứng dụng
- * Quản lý hiển thị và thao tác với danh sách tasks
- */
+//Controller cho màn hình chính của ứng dụng
+//Quản lý hiển thị và thao tác với danh sách tasks
 public class MainController {
 
     @FXML

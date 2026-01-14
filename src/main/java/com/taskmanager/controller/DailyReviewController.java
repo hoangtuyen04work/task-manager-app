@@ -13,10 +13,8 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.List;
 
-/**
- * Controller cho Daily Review Dialog
- * Quản lý việc đánh giá cuối ngày
- */
+//Controller cho Daily Review Dialog
+//Quản lý việc đánh giá cuối ngày
 public class DailyReviewController {
     
     @FXML private DatePicker datePicker;

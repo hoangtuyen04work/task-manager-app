@@ -3,10 +3,6 @@ package com.taskmanager.model;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-/**
- * Model class đại diện cho một Task trong hệ thống
- * Lưu trữ thông tin về công việc cần làm hàng ngày
- */
 public class Task {
     
     private Long id;
@@ -18,9 +14,7 @@ public class Task {
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
     
-    /**
-     * Enum định nghĩa các mức độ ưu tiên của task
-     */
+
     public enum Priority {
         HIGH("Cao"),
         MEDIUM("Trung bình"),
@@ -42,7 +36,6 @@ public class Task {
         }
     }
     
-    // Constructors
     public Task() {
         this.completed = false;
         this.priority = Priority.MEDIUM;
@@ -57,7 +50,6 @@ public class Task {
         this.priority = priority;
     }
     
-    // Getters and Setters
     public Long getId() {
         return id;
     }

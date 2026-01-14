@@ -11,10 +11,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Data Access Object cho Task
- * Xử lý tất cả các thao tác CRUD với database cho Task
- */
 public class TaskDAO {
     
     private final DatabaseConnection dbConnection;
@@ -23,9 +19,7 @@ public class TaskDAO {
         this.dbConnection = DatabaseConnection.getInstance();
     }
     
-    /**
-     * Lưu task mới vào database
-     */
+
     public Task save(Task task) throws SQLException {
         String sql = "INSERT INTO tasks (title, description, task_date, priority, completed) " +
                     "VALUES (?, ?, ?, ?, ?)";

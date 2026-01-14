@@ -4,10 +4,6 @@ import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * Model class chứa dữ liệu thống kê cho Statistics view
- * Tính toán và lưu trữ các chỉ số về hiệu suất làm việc
- */
 public class TaskStatistics {
     
     private int totalTasks;
@@ -15,16 +11,13 @@ public class TaskStatistics {
     private int pendingTasks;
     private double averageCompletionRate;
     
-    // Thống kê theo priority
     private Map<Task.Priority, Integer> tasksByPriority;
     private Map<Task.Priority, Integer> completedByPriority;
     
-    // Thống kê theo ngày
     private Map<LocalDate, Integer> tasksByDate;
     private Map<LocalDate, Integer> completedByDate;
     private Map<LocalDate, Double> completionRateByDate;
     
-    // Top performance days
     private Map<LocalDate, Double> topPerformanceDays;
     
     public TaskStatistics() {
@@ -35,14 +28,12 @@ public class TaskStatistics {
         this.completionRateByDate = new HashMap<>();
         this.topPerformanceDays = new HashMap<>();
         
-        // Initialize priority maps
         for (Task.Priority priority : Task.Priority.values()) {
             tasksByPriority.put(priority, 0);
             completedByPriority.put(priority, 0);
         }
     }
     
-    // Getters and Setters
     public int getTotalTasks() {
         return totalTasks;
     }

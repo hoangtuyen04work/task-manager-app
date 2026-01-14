@@ -138,57 +138,6 @@
                 </ScrollPane>
             </Tab>
 
-            <!-- Tab 2: Charts -->
-            <Tab text="Biểu đồ">
-                <ScrollPane fitToWidth="true">
-                    <VBox spacing="20">
-                        <padding>
-                            <Insets top="20" right="20" bottom="20" left="20" />
-                        </padding>
-
-                        <!-- Bar Chart: Tasks by Date -->
-                        <VBox spacing="10" styleClass="card">
-                            <padding>
-                                <Insets top="15" right="15" bottom="15" left="15" />
-                            </padding>
-                            <Label text="Số lượng tasks theo ngày" styleClass="label-title" />
-                            <BarChart fx:id="barChart" prefHeight="300">
-                                <xAxis>
-                                    <CategoryAxis side="BOTTOM" label="Ngày" />
-                                </xAxis>
-                                <yAxis>
-                                    <NumberAxis side="LEFT" label="Số lượng" />
-                                </yAxis>
-                            </BarChart>
-                        </VBox>
-
-                        <!-- Line Chart: Completion Rate by Date -->
-                        <VBox spacing="10" styleClass="card">
-                            <padding>
-                                <Insets top="15" right="15" bottom="15" left="15" />
-                            </padding>
-                            <Label text="Tỷ lệ hoàn thành theo ngày" styleClass="label-title" />
-                            <LineChart fx:id="lineChart" prefHeight="300">
-                                <xAxis>
-                                    <CategoryAxis side="BOTTOM" label="Ngày" />
-                                </xAxis>
-                                <yAxis>
-                                    <NumberAxis side="LEFT" label="Tỷ lệ (%)" />
-                                </yAxis>
-                            </LineChart>
-                        </VBox>
-
-                        <!-- Pie Chart: Priority Distribution -->
-                        <VBox spacing="10" styleClass="card">
-                            <padding>
-                                <Insets top="15" right="15" bottom="15" left="15" />
-                            </padding>
-                            <Label text="Phân bố theo độ ưu tiên" styleClass="label-title" />
-                            <PieChart fx:id="pieChart" prefHeight="300" />
-                        </VBox>
-                    </VBox>
-                </ScrollPane>
-            </Tab>
 
             <!-- Tab 3: Heatmap (giống Anki) -->
             <Tab text="Heatmap">
@@ -235,7 +184,7 @@
                                     prefHeight="20" />
                                 <Region styleClass="heatmap-cell, heatmap-level-4" prefWidth="20"
                                     prefHeight="20" />
-                                <Label text="Nhiều việc"
+                                <Label text="Nhiều Tviệc"
                                     style="-fx-font-size: 12px; -fx-text-fill: #7f8c8d;" />
                             </HBox>
 

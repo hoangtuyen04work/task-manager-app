@@ -7,10 +7,6 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Data Access Object cho DailyReview
- * Xử lý các thao tác CRUD với database cho Daily Review
- */
 public class DailyReviewDAO {
     
     private final DatabaseConnection dbConnection;
@@ -19,29 +15,26 @@ public class DailyReviewDAO {
         this.dbConnection = DatabaseConnection.getInstance();
     }
     
-    /**
-     * Lưu daily review mới vào database
-     */
     public DailyReview save(DailyReview review) throws SQLException {
         String sql = "INSERT INTO daily_reviews (review_date, total_tasks, completed_tasks, " +
-                    "completion_rate, rating, notes) VALUES (?, ?, ?, ?, ?, ?)";
-        
+                "completion_rate, rating, notes) VALUES (?, ?, ?, ?, ?, ?)";
+
         try (Connection conn = dbConnection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
-            
+            PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+
             stmt.setDate(1, Date.valueOf(review.getReviewDate()));
             stmt.setInt(2, review.getTotalTasks());
             stmt.setInt(3, review.getCompletedTasks());
             stmt.setDouble(4, review.getCompletionRate());
             stmt.setInt(5, review.getRating());
             stmt.setString(6, review.getNotes());
-            
+
             int affectedRows = stmt.executeUpdate();
-            
+
             if (affectedRows == 0) {
                 throw new SQLException("Tạo review thất bại, không có row nào bị ảnh hưởng.");
             }
-            
+
             try (ResultSet generatedKeys = stmt.getGeneratedKeys()) {
                 if (generatedKeys.next()) {
                     review.setId(generatedKeys.getLong(1));
@@ -49,14 +42,11 @@ public class DailyReviewDAO {
                     throw new SQLException("Tạo review thất bại, không lấy được ID.");
                 }
             }
-            
+
             return review;
         }
     }
     
-    /**
-     * Cập nhật daily review
-     */
     public void update(DailyReview review) throws SQLException {
         String sql = "UPDATE daily_reviews SET total_tasks = ?, completed_tasks = ?, " +
                     "completion_rate = ?, rating = ?, notes = ? WHERE id = ?";
@@ -75,9 +65,6 @@ public class DailyReviewDAO {
         }
     }
     
-    /**
-     * Xóa daily review
-     */
     public void delete(Long id) throws SQLException {
         String sql = "DELETE FROM daily_reviews WHERE id = ?";
         
@@ -89,9 +76,6 @@ public class DailyReviewDAO {
         }
     }
     
-    /**
-     * Tìm review theo ngày
-     */
     public DailyReview findByDate(LocalDate date) throws SQLException {
         String sql = "SELECT * FROM daily_reviews WHERE review_date = ?";
         
@@ -110,9 +94,6 @@ public class DailyReviewDAO {
         return null;
     }
     
-    /**
-     * Lấy tất cả reviews
-     */
     public List<DailyReview> findAll() throws SQLException {
         String sql = "SELECT * FROM daily_reviews ORDER BY review_date DESC";
         List<DailyReview> reviews = new ArrayList<>();
@@ -129,9 +110,6 @@ public class DailyReviewDAO {
         return reviews;
     }
     
-    /**
-     * Tìm reviews trong khoảng thời gian
-     */
     public List<DailyReview> findByDateRange(LocalDate startDate, LocalDate endDate) throws SQLException {
         String sql = "SELECT * FROM daily_reviews WHERE review_date BETWEEN ? AND ? " +
                     "ORDER BY review_date DESC";
@@ -191,9 +169,7 @@ public class DailyReviewDAO {
         return review;
     }
     
-    /**
-     * Map ResultSet thành DailyReview object
-     */
+
     private DailyReview mapResultSetToReview(ResultSet rs) throws SQLException {
         DailyReview review = new DailyReview();
         review.setId(rs.getLong("id"));
